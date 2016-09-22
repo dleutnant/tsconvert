@@ -91,21 +91,27 @@ read_moment  <- function(file, verbose=FALSE) {
 #' the stormwater quality model 'MOMENT' and creates a xts-object.
 #'
 #' @title Read rainfall time series data from .reg file format
-#' @param file The file to be read
+#' @param file The file to be read.
+#' @param skip Number of initial lines to skip; see \code{\link[utils]{read.table}}.
+#' @param format Character string giving a date-time format as used by strptime.
 #' @param verbose logical. Provide additional details?
 #' @return A list of xts-objects.
+#' @note [1/1000 mm in 5 min]
 #' @rdname read_reg
 #' @export 
 #' @seealso \code{\link[xts]{xts}}.
-read_reg <- function(file, verbose=FALSE) {
+read_reg <- function(file, 
+                     skip, 
+                     format = c("%d.%m.%Y %H","%d %m %Y %H"), 
+                     verbose=FALSE) {
   
   #file <- "testdata/moment/N7.reg"
-  data <- utils::read.fwf(file,widths = c(5, 10, 5, rep(5, 12)),skip = 3, 
-                          stringsAsFactors = FALSE, strip.white = TRUE)
-    
+  data <- read.fwf(file,widths = c(5, 10, 5, rep(5, 12)), skip = skip, 
+                   stringsAsFactors = FALSE, strip.white = TRUE)
+  
   ## times
   timedata <- as.POSIXct(paste(as.character(data$V2),as.character(data$V3)),
-                         format = "%d.%m.%Y %H",
+                         format = format,
                          tz = "GMT",
                          origin = "1970-01-01")
   

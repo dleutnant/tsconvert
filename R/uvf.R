@@ -11,7 +11,7 @@
 read_uvf <- function(file, verbose=TRUE, return.comments=FALSE) {
   
   list.of.xts <- list()
-  xts.attributes <- xts()
+  xts.attributes <- xts::xts()
   
   conn <- file(file,open = "r")
   
